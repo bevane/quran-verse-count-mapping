@@ -1,31 +1,37 @@
-# Qur'an verse count mapping
+def main():
+    chapter_to_verse_dict = get_map()
+    validation_results = []
+    # list of (chapter_number, verse_number) inputs to validate
+    input_list = [
+        (1, 1),
+        (1, 0),
+        (1, 7),
+        (1, 8),
+        (2, 286),
+        (2, 300),
+        (3, 386),
+    ]
+    for input in input_list:
+        chapter = input[0]
+        verse = input[1]
+        result = validate(chapter_to_verse_dict, chapter, verse)
+        validation_results.append((input, result))
+    print(validation_results)
 
-Each Surah (chapter) in the Qur'an has different number of Ayat (verses)
-which can make input validation for chapter number and verse number a bit
-complicated.
 
-This repo provides a json object with chapter number to verse count key-value
-pairs that you can copy into your programs to make it easier to validate
-without having to hit the quran api.
+def validate(map, chapter, verse):
+    # return true if the chapter and verse are valid
+    # validate chapter
+    if not chapter in map:
+        return False
+    # validate verse
+    if verse <= 0 or verse > map[chapter]:
+        return False
+    return True
 
-# Map generation
 
-`map.json` was generated with `script/generateMap` by fetching
-chapters information from the quran api.
-
-# Examples
-
-Below are snippets of code in different languages using this map to do some
-validation. Functioning code examples can be found in the `examples/`
-
-## Python
-
-<details>
-<summary>Map in Python | Click to Expand</summary>
-
-```python
-    # get_map() returns the below dict
-    map = {
+def get_map():
+    return {
         1: 7,
         2: 286,
         3: 200,
@@ -141,51 +147,6 @@ validation. Functioning code examples can be found in the `examples/`
         113: 5,
         114: 6,
     }
-```
-</details>
-
-```python
-def main():
-    chapter_to_verse_dict = get_map()
-    validation_results = []
-    # list of (chapter_number, verse_number) inputs to validate
-    input_list = [
-        (1, 1),
-        (1, 0),
-        (1, 7),
-        (1, 8),
-        (2, 286),
-        (2, 300),
-        (3, 386),
-    ]
-    for input in input_list:
-        chapter = input[0]
-        verse = input[1]
-        result = validate(chapter_to_verse_dict, chapter, verse)
-        validation_results.append((input, result))
-    print(validation_results)
 
 
-def validate(map, chapter, verse):
-    # return true if the chapter and verse are valid
-    # validate chapter
-    if not chapter in map:
-        return False
-    # validate verse
-    if verse <= 0 or verse > map[chapter]:
-        return False
-    return True
-```
-Results
-```python
-[
-    ((1, 1), True),
-    ((1, 0), False),
-    ((1, 7), True),
-    ((1, 8), False),
-    ((2, 286), True),
-    ((2, 300), False),
-    ((3, 386), False)
-]
-```
-
+main()
